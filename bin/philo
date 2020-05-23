@@ -64,8 +64,6 @@ if ($lib) {
 if ($args['XF']) {
     $extract_lib = $lib ? "extract(include '$lib')" : '';
     $f = @eval("namespace philo; $extract_lib; return ${args['XF']};");
-    // $pairs = zip($pairs, array_fill(0, count($pairs), identity));
-    // $f = map(match(...$pairs));
     $opt = [];
     if (!$args['--with-null']) {
         $opt[] = filter(not(is_null));
