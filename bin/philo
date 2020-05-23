@@ -21,7 +21,7 @@ DOC;
 foreach ([
     __DIR__.'/../vendor/autoload.php',
     __DIR__.'/../../../autoload.php',
-] as $autloader) {
+] as $autoloader) {
     if (file_exists($autoloader)) {
         break;
     }
