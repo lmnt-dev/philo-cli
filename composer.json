@@ -10,7 +10,7 @@
     "bin": ["bin/philo"],
     "require": {
         "docopt/docopt": "^1.0",
-        "lmnt/philo": "dev-master",
+        "lmnt/philo": "@dev",
         "psy/psysh": "^0.10.4"
     }
 }
