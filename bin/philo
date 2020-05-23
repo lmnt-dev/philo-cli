@@ -1,0 +1,100 @@
+#!/usr/bin/env php
+<?php
+
+namespace philo;
+
+$doc = <<<DOC
+⏂  ρhilo
+
+Usage:
+  philo [FILE | XF] [--with-keys] [--with-null] [--lib=<lib>] [-]
+  philo (-h | --help)
+  philo (-v | --version)
+
+Options:
+  -h --help       Show this screen
+  -v --version    Show version
+  -n --with-null  Include null results
+  -k --with-keys  Preserve keys
+DOC;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$args = \Docopt::handle($doc, ['version' => 'v0.1.0']);
+
+$stat = fstat(STDIN);
+$mode = $stat['mode'] & 0170000;
+$is_stdin = $mode & 0010000 || $mode & 0100000;
+
+$vars = [];
+
+if ($is_stdin) {
+    $args['XF'] = $args['FILE'];
+    $args['FILE'] = 'php://stdin';
+} else if ($args['FILE']) {
+    if (!is_url($args['FILE']) && !file_exists($args['FILE'])) {
+        echo "Input not found\n";
+        return 1;
+    }
+}
+
+if ($args['FILE']) {
+    $json = file_get_contents($args['FILE']);
+    $vars['x'] = json_decode($json, JSON_OBJECT_AS_ARRAY);    
+}
+
+$lib = $args['--lib'];
+if ($lib) {
+    if (!file_exists($lib)) {
+        echo "Library not found: $lib\n";
+        return 1;
+    }
+    $vars = array_merge($vars, include $lib);
+}
+
+if ($args['XF']) {
+    $extract_lib = $lib ? "extract(include '$lib')" : '';
+    $f = @eval("namespace philo; $extract_lib; return ${args['XF']};");
+    // $pairs = zip($pairs, array_fill(0, count($pairs), identity));
+    // $f = map(match(...$pairs));
+    $opt = [];
+    if (!$args['--with-null']) {
+        $opt[] = filter(not(is_null));
+    }
+    if (!$args['--with-keys']) {
+        $opt[] = 'array_values';
+    }
+    if (!empty($opt)) {
+        $f = pipe($f, ...$opt);
+    }
+    echo json_encode(@$f($vars['x'])) . "\n";
+    return 0;
+}
+
+if ($is_stdin) {
+    echo "XF required for non-interactive input\n";
+    return 1;
+}
+
+$config = new \Psy\Configuration();
+$sh = new class extends \Psy\Shell {
+    protected function getHeader()
+    {
+        return;
+    }
+    protected function getPrompt()
+    {
+        return '⏂ > ';
+    }
+    public function onInput($input)
+    {
+        $input = parent::onInput($input);
+        if (strpos($input, '=') === false && strpos($input, '($x)') === false) {
+            $input .= '($x)';
+        }
+        return $input;
+    }
+};
+$sh->addCode('namespace philo;');
+$sh->setScopeVariables($vars);
+$sh->run();
