@@ -93,14 +93,6 @@ $sh = new class extends \Psy\Shell {
     {
         return '⏂ > ';
     }
-    public function onInput($input)
-    {
-        $input = parent::onInput($input);
-        if (strpos($input, '=') === false && strpos($input, '($x)') === false) {
-            $input .= '($x)';
-        }
-        return $input;
-    }
 };
 $sh->addCode('namespace philo;');
 $sh->setScopeVariables($vars);
