@@ -8,8 +8,6 @@
     }],
     "license": "MIT",
     "bin": ["bin/philo"],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
         "docopt/docopt": "^1.0",
         "lmnt/philo": "@dev",
