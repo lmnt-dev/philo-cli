@@ -1,6 +1,6 @@
 {
     "name": "lmnt/philo-cli",
-    "description": "Transform data from your terminal using extensible & expressive philo syntax",
+    "description": "Wrangle data from your terminal using extensible & expressive philo syntax",
     "keywords": ["philo", "cli", "functional", "pattern", "pattern matching"],
     "authors": [{
         "name": "Denny Shimkoski",
