@@ -74,7 +74,7 @@ Examine the datasource:
 What are the keywords for the last 3 entries?
 
 ```php
-⏂ > $f = pipe(pluck('keyword'), slice(-3))($x['dataset'])
+⏂ > pipe(pluck('keyword'), slice(-3))($x['dataset'])
 ```
 
 ## Non-interactive mode
