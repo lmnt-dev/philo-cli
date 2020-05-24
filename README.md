@@ -23,7 +23,7 @@ cgr --stability dev lmnt/philo-cli
 Use the repl to experiment:
 
 ```bash
-philo http://data.cdc.gov/data.json
+> philo
 ```
 
 ### Predicates & Types
