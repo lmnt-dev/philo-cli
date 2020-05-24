@@ -7,15 +7,13 @@ $doc = <<<DOC
 ⏂  ρhilo
 
 Usage:
-  philo [FILE | XF] [--with-keys] [--with-null] [--lib=<lib>] [-]
+  philo [FILE | XF] [--lib=<lib>] [-]
   philo (-h | --help)
   philo (-v | --version)
 
 Options:
   -h --help       Show this screen
   -v --version    Show version
-  -n --with-null  Include null results
-  -k --with-keys  Preserve keys
 DOC;
 
 foreach ([
@@ -58,22 +56,11 @@ if ($lib) {
         echo "Library not found: $lib\n";
         return 1;
     }
-    $vars = array_merge($vars, include $lib);
 }
 
 if ($args['XF']) {
     $extract_lib = $lib ? "extract(include '$lib')" : '';
     $f = @eval("namespace philo; $extract_lib; return ${args['XF']};");
-    $opt = [];
-    if (!$args['--with-null']) {
-        $opt[] = filter(not(is_null));
-    }
-    if (!$args['--with-keys']) {
-        $opt[] = 'array_values';
-    }
-    if (!empty($opt)) {
-        $f = pipe($f, ...$opt);
-    }
     echo json_encode(@$f($vars['x'])) . "\n";
     return 0;
 }
@@ -95,5 +82,5 @@ $sh = new class extends \Psy\Shell {
     }
 };
 $sh->addCode('namespace philo;');
-$sh->setScopeVariables($vars);
+$sh->setScopeVariables($lib ? array_merge($vars, include $lib) : $vars);
 $sh->run();

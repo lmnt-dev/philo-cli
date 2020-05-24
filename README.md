@@ -41,6 +41,10 @@ We can make some assertions now:
 ```php
 ⏂ > is($Person, ['name' => 'bob', 'age' => 50])
 => true
+⏂ > is($Person, ['name' => 'bob', 'age' => 50, 'extra' => 1])
+=> true
+⏂ > is(strict($Person), ['name' => 'bob', 'age' => 50, 'extra' => 1])
+=> false
 ⏂ > is($Person, ['name' => 'bob', 'age' => -1])
 => false
 ⏂ > is($Person, ['name' => 'bob', 'age' => 50, 'website' => 'google.com'])
@@ -53,7 +57,17 @@ We can make some assertions now:
 => false
 ```
 
-Get back to your terminal via `ctrl+c` or execute `exit`.
+On built-in types as well:
+
+```php
+⏂ > $x = new \ArrayObject()
+⏂ > is(\ArrayObject::class, $x)
+=> true
+⏂ > is(\Countable::class, $x)
+=> true
+```
+
+Get back to your terminal via `ctrl + c` or by typing `exit`.
 
 ### Loading data
 
@@ -96,4 +110,29 @@ Or send via input redirection:
 ["(x - 1) (x + 1)","x^2-1","factor"]
 ```
 
-...more soon!
+## Extending philo
+
+Open `~/philo-lib.php` in your editor and define a new type:
+
+```php
+<?php
+  
+namespace philo;
+
+const size = 'philo\size';
+
+function size($x) {
+    return is_string($x) ? strlen($x) : (is_countable($x) ? count($x) : null);
+}
+
+return [
+    'Thing' => ['name' => pipe(size, gte(5))]
+];
+```
+
+Save and you're done! Try it out:
+
+```bash
+> echo '[{"name": "abc"},{"name":"01234"}]' | bin/philo --lib ~/philo-lib.php 'fanout(every($Thing),some($Thing))'
+[false,true]
+```
