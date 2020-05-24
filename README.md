@@ -62,7 +62,7 @@ Load data into philo from a local file or a URL.
 Let's restart the repl with some json from a public endpoint:
 
 ```bash
-philo http://data.cdc.gov/data.json
+> philo http://data.cdc.gov/data.json
 ```
 
 Examine the datasource:
