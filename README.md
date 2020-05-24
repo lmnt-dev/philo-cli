@@ -133,6 +133,6 @@ return [
 Save and you're done! Try it out:
 
 ```bash
-> echo '[{"name": "abc"},{"name":"01234"}]' | bin/philo --lib ~/philo-lib.php 'fanout(every($Thing),some($Thing))'
+> echo '[{"name": "abc"},{"name":"01234"}]' | philo --lib ~/philo-lib.php 'fanout(every($Thing),some($Thing))'
 [false,true]
 ```
