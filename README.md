@@ -88,7 +88,7 @@ Examine the datasource:
 What are the keywords for the last 3 entries?
 
 ```php
-⏂ > pipe(pluck('keyword'), slice(-3))($x['dataset'])
+⏂ > pipe(to_array(pluck('keyword')), slice(-3))($x['dataset'])
 ```
 
 ## Non-interactive mode
@@ -96,7 +96,7 @@ What are the keywords for the last 3 entries?
 Pipe data in:
 
 ```bash
-> echo '[{"a":1,"b":3},{"a":2,"b":4}]' | philo 'pluck(a)'
+> echo '[{"a":1,"b":3},{"a":2,"b":4}]' | philo 'to_array(pluck(a), true)'
 [{"a":1},{"a":2}]
 ```
 
@@ -104,9 +104,9 @@ Or send via input redirection:
 
 ```bash
 > curl https://newton.now.sh/factor/x^2-1 > /tmp/math
-> cat /tmp/math                                                           
+> cat /tmp/math
 {"operation":"factor","expression":"x^2-1","result":"(x - 1) (x + 1)"}
-> philo 'pipe(values, spread(fn($a, $b, $c) => [$c, $b, $a]))' < /tmp/math
+> philo 'pipe(to_array(values), spread(fn($a, $b, $c) => [$c, $b, $a]))' < /tmp/math
 ["(x - 1) (x + 1)","x^2-1","factor"]
 ```
 
@@ -133,6 +133,6 @@ return [
 Save and you're done! Try it out:
 
 ```bash
-> echo '[{"name": "abc"},{"name":"01234"}]' | philo --lib ~/philo-lib.php 'fanout(every($Thing),some($Thing))'
-[false,true]
+> echo '[{"name": "abc"},{"name":"01234"}]' | philo --lib ~/philo-lib.php 'to_array(map(match($Thing, "thing")))'
+[null,"thing"]
 ```
