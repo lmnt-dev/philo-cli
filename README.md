@@ -133,6 +133,7 @@ return [
 Save and you're done! Try it out:
 
 ```bash
-> echo '[{"name": "abc"},{"name":"01234"}]' | philo --lib ~/philo-lib.php 'to_array(map(match($Thing, "thing")))'
+> echo '[{"name": "abc"},{"name":"01234"}]' | \
+> philo --lib ~/philo-lib.php 'to_array(map(match($Thing, "thing")))'
 [null,"thing"]
 ```
